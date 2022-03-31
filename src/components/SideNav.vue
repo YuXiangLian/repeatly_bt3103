@@ -10,14 +10,20 @@
             <img class="icon" src="../../img/SideBarImages/mdi-home-circle@2x.png"/>
             <SideBarLink to="/home">Homepage</SideBarLink>
           </div>
+
           <div class="side-row">
             <img class="icon" src="../../img/SideBarImages/groups@2x.png"/>               
             <SideBarLink to="/groups">Groups</SideBarLink>
           </div>
-          <div class="teacher-bar" v-if="role=='teacher'">
+
+          <div class="teacher-bar" v-if="this.role == 'Teacher'">
             <div class="side-row">
               <img class="icon" src="../../img/SideBarImages/vector-34@2x.png"/>
               <SideBarLink to="/students">Students</SideBarLink>
+            </div>
+            <div class="side-row">
+              <img class="icon" src="../../img/SideBarImages/simple-icons-googleanalytics@2x.png"/>
+              <SideBarLink to="/analytics">Analytics</SideBarLink>
             </div>
           </div>
           <div class="side-row">
@@ -32,6 +38,8 @@
               <img class="icon-profile" src="../../img/SideBarImages/oval-37@2x.png"/>  
               <SideBarLink to="/settings">{{username}}</SideBarLink>
             </div> 
+
+              
             <div class="sync">
               <div class="side-row">
                 <img class="sync-icon" src="../../img/SideBarImages/sync-arrows--1--1@2x.png"/> 
@@ -69,16 +77,6 @@ async function displayUserInfo(email){
   }
 }
 
-async function getRole(email){
-  try{
-    const docRef = doc(db,"users",email)
-    const docVal = await getDoc(docRef)
-    const role = String(docVal.data().role)
-    return role
-  } catch (error){
-    console.log("error")
-  }
-}
 
 export default {
     name:"SideNav",
@@ -88,9 +86,9 @@ export default {
     },
     data() {
         return {
+            user:false,
             role:"",
             username:"",
-  
         }
     },
 
@@ -99,9 +97,9 @@ export default {
             if(user) {
                 console.log(user.email)
                 const tempUsername = await displayUserInfo(user.email)
-                const tempRole= await getRole(user.email)
+                this.user = user;
+                this.role = user.role;
                 this.username = tempUsername;
-                this.role = tempRole
             }
         })
     },
@@ -247,6 +245,7 @@ export default {
   width:2.75em;
   height:2.75em;
   margin-top: 1em;
+  margin-right: 1em;
   margin-left: 1.15em;
 }
 
